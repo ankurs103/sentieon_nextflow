@@ -26,7 +26,7 @@ reference_dbsnp_index = file(params.ref_dbsnp_idx)
 
 
 Channel
-    .fromPath(params.index)
+    .fromPath(params.input)
     .splitCsv(header:true)
     .map{ row-> tuple(row.sample_id, file(row.read1), file(row.read2)) }
     .into { samples1_ch; samples2_ch }
