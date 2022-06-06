@@ -1,0 +1,4 @@
+sample_id,read1,read2
+10591_part_001,/home/ec2-user/pipeline/sentieon-genomics-202112.01/bin/data/10591_1.part_001.fq.gz,/home/ec2-user/pipeline/sentieon-genomics-202112.01/bin/data/10591_2.part_001.fq.gz
+10591_part_002,/home/ec2-user/pipeline/sentieon-genomics-202112.01/bin/data/10591_1.part_002.fq.gz,/home/ec2-user/pipeline/sentieon-genomics-202112.01/bin/data/10591_2.part_002.fq.gz
+10591_part_003,/home/ec2-user/pipeline/sentieon-genomics-202112.01/bin/data/10591_1.part_003.fq.gz,/home/ec2-user/pipeline/sentieon-genomics-202112.01/bin/data/10591_2.part_003.fq.gz
