@@ -67,7 +67,6 @@ process alignment {
     script:
     """
   export SENTIEON_LICENSE=172.31.27.7:8990       
-echo $SENTIEON_LICENSE
 
     bwa mem -v 1 -K '${params.chunk_size}' -R "@RG\\tID:${sample_id}\\tSM:${sample_id}\\tPL:MGI" -M -t '${task.cpus}' '${ref}' '${fastq1Path}' '${fastq2Path}'| sentieon util sort -r '${ref}' -o '${sample_id}_sorted.bam' -t '${task.cpus}' --sam2bam -i -
     
