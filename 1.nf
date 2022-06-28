@@ -7,7 +7,7 @@ ref_ann = file(params.ref_ann)
 ref_bwt = file(params.ref_bwt)
 ref_pac = file(params.ref_pac)
 ref_sa = file(params.ref_sa)
-ref_dict = file(params.ref_dict)
+////ref_dict = file(params.ref_dict)
 // fastq1Path = file(params.fastqr1)
 // fastq2Path = file(params.fastqr2)
 // sample_id = params.sample_id
@@ -39,14 +39,14 @@ Channel
 
 process alignment {
    //  tag "${sample_id}"
-   //  stageInMode 'copy'
-    cpus 30
-   //  memory '61400 MB'
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
    set sample_id, file(fastq1Path), file(fastq2Path) from samples1_ch
  file ref
-    file ref_dict
+//    file ref_dict
     file ref_fai
     file ref_amb
     file ref_ann
@@ -66,9 +66,8 @@ process alignment {
     publishDir "${outpath}/fastq/${sample_id}/", mode: 'copy', overwrite: false
     script:
     """
-  export SENTIEON_LICENSE=172.31.27.7:8990       
-
-    bwa mem -v 1 -K '${params.chunk_size}' -R "@RG\\tID:${sample_id}\\tSM:${sample_id}\\tPL:MGI" -M -t '${task.cpus}' '${ref}' '${fastq1Path}' '${fastq2Path}'| sentieon util sort -r '${ref}' -o '${sample_id}_sorted.bam' -t '${task.cpus}' --sam2bam -i -
+    export SENTIEON_LICENSE=172.31.10.202:8990
+    sentieon bwa mem -v 1 -K '${params.chunk_size}' -R "@RG\\tID:${sample_id}\\tSM:${sample_id}\\tPL:MGI" -M -t '${task.cpus}' '${ref}' '${fastq1Path}' '${fastq2Path}'| sentieon util sort -r '${ref}' -o '${sample_id}_sorted.bam' -t '${task.cpus}' --sam2bam -i -
     
     """
 }
@@ -91,13 +90,14 @@ process alignment {
 
 process alignment_metrics {
     tag "${sample_id}"
-    cpus 10
-
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
     input:
     file aligned_bam from outputs_sorted_bam1
     file bam_index from outputs_indexed_bam1
     file ref
-    file ref_dict
+//    file ref_dict
     file ref_fai
     val sample_id from sample_id_ch_2
     output:
@@ -125,8 +125,9 @@ process alignment_metrics {
 process plot_alignment_metrics_gc {
     tag "${sample_id}"
     errorStrategy 'finish'
-    cpus 10
-
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
     input:
     file input_gcmetrics from output_gcmetrics
 val sample_id from sample_id_ch_3
@@ -144,7 +145,9 @@ val sample_id from sample_id_ch_3
 
 process plot_alignment_metrics_qd {
     tag "${sample_id}"
-    cpus 10
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file input_qualdistribution from output_qualdistribution
@@ -163,7 +166,9 @@ val sample_id from sample_id_ch_4
 
 process plot_alignment_metrics_mq {
     tag "${sample_id}"
-    cpus 10
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file input_meanqualitybycycle from output_meanqualitybycycle
@@ -182,7 +187,9 @@ val sample_id from sample_id_ch_5
 
 process plot_alignment_metrics_isize {
     tag "${sample_id}"
-    cpus 10
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file input_insertsize from output_insertsize
@@ -200,8 +207,10 @@ val sample_id from sample_id_ch_6
 }
 process locus_collector {
     tag "${sample_id}"
+    stageInMode 'copy'
 
-    cpus 10
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file aligned_bam from outputs_sorted_bam2
@@ -223,7 +232,9 @@ val sample_id from sample_id_ch_7
 
 process deduplication {
     tag "${sample_id}"
-    cpus 10
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file aligned_bam from outputs_sorted_bam3
@@ -258,7 +269,7 @@ val sample_id from sample_id_ch_8
 //    file deduped_bam from outputs_deduped_bam
 //    file bam_index from outputs_deduped_indexed_bam
 //    file ref
-//    file ref_dict
+////    file ref_dict
 //    file ref_fai
 //    file reference_mills
 //	file reference_mills_index
@@ -284,13 +295,14 @@ val sample_id from sample_id_ch_8
 
 process qualcal {
     tag "${sample_id}"
-    cpus 10
-
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
     input:
     file deduped_bam from outputs_deduped_bam1
     file bam_index from outputs_deduped_indexed_bam1
     file ref
-    file ref_dict
+//    file ref_dict
     file ref_fai
     file reference_mills
     file reference_mills_index
@@ -316,14 +328,16 @@ val sample_id from sample_id_ch_9
 
 process qualcalpost {
     tag "${sample_id}"
-    cpus 10
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file deduped_bam from outputs_deduped_bam2
     file bam_index from outputs_deduped_indexed_bam2
     file qualcal from outputs_recal_table1
     file ref
-    file ref_dict
+//    file ref_dict
     file ref_fai
     file reference_mills
     file reference_mills_index
@@ -350,7 +364,9 @@ val sample_id from sample_id_ch_10
 
 process applyrecal {
     tag "${sample_id}"
-    cpus 10
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file qualcal from outputs_recal_table2
@@ -372,7 +388,9 @@ val sample_id from sample_id_ch_11
 
 process plotbqsr {
     tag "${sample_id}"
-    cpus 10
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file recal_table from outputs_bqsr
@@ -391,14 +409,16 @@ val sample_id from sample_id_ch_12
 
 process haplotypecaller {
     tag "${sample_id}"
-    cpus 10
+    stageInMode 'copy'
+    cpus 128
+    memory '245760 MB'	
 
     input:
     file deduped_bam from outputs_deduped_bam3
     file bam_index from outputs_deduped_indexed_bam3
     file recal_table from outputs_recal_table3
     file ref
-    file ref_dict
+//    file ref_dict
     file ref_fai
     file reference_dbsnp
     file reference_dbsnp_index
